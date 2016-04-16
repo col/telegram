@@ -13,5 +13,9 @@ defmodule Telegram do
     def parse(body) when is_binary(body) do
       Poison.decode!(body, as: %Telegram.Request{})
     end
-  end  
+
+    def encode(request) do
+      Poison.encode!(request)
+    end
+  end
 end
