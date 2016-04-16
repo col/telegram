@@ -1,0 +1,15 @@
+{
+  "chat": {
+    "id": 123,
+    "title": "Test Chat",
+    "type": "group"
+  },
+  "date": 1460556888,
+  "from": {
+    "id": 456,
+    "first_name": "Col",
+    "last_name": "Harris"
+  },
+  "message_id": 789,
+  "text": "/echo Hello"
+}
