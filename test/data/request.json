@@ -1,15 +1,25 @@
 {
-  "text": "Hello",
-  "message_id": 789,
-  "from": {
-    "last_name": "Harris",
-    "id": 456,
-    "first_name": "Col"
-  },
-  "date": 1460556888,
-  "chat": {
-    "type": "group",
-    "title": "Test",
-    "id": 123
+  "update_id": 131900178,
+  "message":{
+    "text": "/command",
+    "message_id": 789,
+    "from": {
+      "last_name": "Harris",
+      "id": 456,
+      "first_name": "Col"
+    },
+    "entities":[
+      {
+        "type":"bot_command",
+        "offset":0,
+        "length":8
+      }
+    ],
+    "date": 1460556888,
+    "chat": {
+      "type": "group",
+      "title": "Test",
+      "id": 123
+    }
   }
 }

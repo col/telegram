@@ -3,19 +3,29 @@ defmodule TelegramTest do
   doctest Telegram
 
   @sample_request %Telegram.Request{
-    chat: %Telegram.Chat{
-      id: 123,
-      title: "Test",
-      type: "group"
-    },
-    from: %Telegram.User{
-      id: 456,
-      first_name: "Col",
-      last_name: "Harris"
-    },
-    date: 1460556888,
-    message_id: 789,
-    text: "Hello"
+    update_id: 131900178,
+    message: %Telegram.Message{
+      chat: %Telegram.Chat{
+        id: 123,
+        title: "Test",
+        type: "group"
+      },
+      from: %Telegram.User{
+        id: 456,
+        first_name: "Col",
+        last_name: "Harris"
+      },
+      entities: [
+        %Telegram.Entity{
+          type: "bot_command",
+          offset: 0,
+          length: 8
+        }
+      ],
+      date: 1460556888,
+      message_id: 789,
+      text: "/command"
+    }
   }
 
   test "parse request" do

@@ -7,8 +7,16 @@ defmodule Telegram do
     defstruct [:id, :first_name, :last_name]
   end
 
+  defmodule Entity do
+    defstruct [:type, :offset, :length]
+  end
+
+  defmodule Message do
+    defstruct [chat: %Telegram.Chat{}, from: %Telegram.User{}, entities: [%Telegram.Entity{}], date: nil, message_id: nil, text: nil]
+  end
+
   defmodule Request do
-    defstruct [chat: %Telegram.Chat{}, from: %Telegram.User{}, date: nil, message_id: nil, text: nil]
+    defstruct [update_id: nil, message: %Telegram.Message{}]
 
     def parse(body) when is_binary(body) do
       Poison.decode!(body, as: %Telegram.Request{})
