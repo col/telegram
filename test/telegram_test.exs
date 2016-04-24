@@ -1,22 +1,23 @@
 defmodule TelegramTest do
   use ExUnit.Case
+  alias Telegram.{Update, Message, Chat, User, Entity}
   doctest Telegram
 
-  @sample_update %Telegram.Update{
+  @sample_update %Update{
     update_id: 131900178,
-    message: %Telegram.Message{
-      chat: %Telegram.Chat{
+    message: %Message{
+      chat: %Chat{
         id: 123,
         title: "Test",
         type: "group"
       },
-      from: %Telegram.User{
+      from: %User{
         id: 456,
         first_name: "Col",
         last_name: "Harris"
       },
       entities: [
-        %Telegram.Entity{
+        %Entity{
           type: "bot_command",
           offset: 0,
           length: 8
@@ -32,9 +33,9 @@ defmodule TelegramTest do
 
   test "parse bot message" do
     {:ok, json} = File.read("test/data/bot_message.json")
-    update = Telegram.Update.parse(json)
+    update = Update.parse(json)
     assert %{update_id: 131900178, message: message} = update
-    assert %Telegram.Message{
+    assert %Message{
       chat: chat,
       from: from,
       entities: entities,
@@ -44,16 +45,16 @@ defmodule TelegramTest do
       command: "/command",
       params: ["some", "params"]
     } = message
-    assert %Telegram.Chat{id: 123, title: "Test", type: "group"} = chat
-    assert %Telegram.User{id: 456, first_name: "Col", last_name: "Harris"} = from
-    assert [%Telegram.Entity{type: "bot_command", offset: 0, length: 8}] = entities
+    assert %Chat{id: 123, title: "Test", type: "group"} = chat
+    assert %User{id: 456, first_name: "Col", last_name: "Harris"} = from
+    assert [%Entity{type: "bot_command", offset: 0, length: 8}] = entities
   end
 
   test "parse text message" do
     {:ok, json} = File.read("test/data/text_message.json")
-    update = Telegram.Update.parse(json)
+    update = Update.parse(json)
     assert %{update_id: 131900178, message: message} = update
-    assert %Telegram.Message{
+    assert %Message{
       chat: chat,
       from: from,
       entities: [],
@@ -63,13 +64,45 @@ defmodule TelegramTest do
       command: nil,
       params: nil
     } = message
-    assert %Telegram.Chat{id: 123, title: "Test", type: "group"} = chat
-    assert %Telegram.User{id: 456, first_name: "Col", last_name: "Harris"} = from
+    assert %Chat{id: 123, title: "Test", type: "group"} = chat
+    assert %User{id: 456, first_name: "Col", last_name: "Harris"} = from
   end
 
   test "encode update" do
-    json = Telegram.Update.encode(@sample_update)
-    update = Telegram.Update.parse(json)
+    json = Update.encode(@sample_update)
+    update = Update.parse(json)
     assert update == @sample_update
   end
+
+  test "Message.set_text" do
+    message = %Message{} |> Message.set_text("New Text")
+    assert "New Text" = message.text
+  end
+
+  test "Message.set_entity" do
+    message = %Message{}
+      |> Message.set_text("/example_command")
+      |> Message.set_entity(%Entity{type: "bot_command", offset: 0, length: 16})
+
+    assert Message.entity_value(message, "bot_command") == "/example_command"
+  end
+
+  test "Message.entity_value" do
+    message = %Message{
+      text: "/example_command",
+      entities: [%Entity{type: "bot_command", offset: 0, length: 16}]
+    }
+    assert Message.entity_value(message, "bot_command") == "/example_command"
+  end
+
+  test "Message.process_entities" do
+    message = %Message{}
+      |> Message.set_text("/example_command param1 param2")
+      |> Message.set_entity(%Entity{type: "bot_command", offset: 0, length: 16})
+      |> Message.process_entities
+
+    assert message.command == "/example_command"
+    assert message.params == ["param1", "param2"]
+  end
+
 end

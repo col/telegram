@@ -27,6 +27,20 @@ defmodule Telegram do
       params: nil,
     ]
 
+    def set_text(message, text) do
+      Map.put(message, :text, text)
+    end
+
+    def set_entity(message, entity) do
+      entities = [entity|Enum.reject(message.entities, fn(e) -> e.type == entity.type end)]
+      Map.put(message, :entities, entities)
+    end
+
+    def entity_value(_, nil), do: nil
+    def entity_value(message, type) when is_binary(type) do
+      entity = Entity.find(message.entities, type)
+      entity_value(message, entity)
+    end
     def entity_value(message, entity) do
       String.slice(message.text, entity.offset, entity.length)
     end
