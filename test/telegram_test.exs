@@ -2,7 +2,7 @@ defmodule TelegramTest do
   use ExUnit.Case
   doctest Telegram
 
-  @sample_request %Telegram.Request{
+  @sample_update %Telegram.Update{
     update_id: 131900178,
     message: %Telegram.Message{
       chat: %Telegram.Chat{
@@ -31,9 +31,9 @@ defmodule TelegramTest do
   }
 
   test "parse bot message" do
-    {:ok, request_body} = File.read("test/data/bot_message.json")
-    request = Telegram.Request.parse(request_body)
-    assert %{update_id: 131900178, message: message} = request
+    {:ok, json} = File.read("test/data/bot_message.json")
+    update = Telegram.Update.parse(json)
+    assert %{update_id: 131900178, message: message} = update
     assert %Telegram.Message{
       chat: chat,
       from: from,
@@ -50,9 +50,9 @@ defmodule TelegramTest do
   end
 
   test "parse text message" do
-    {:ok, request_body} = File.read("test/data/text_message.json")
-    request = Telegram.Request.parse(request_body)
-    assert %{update_id: 131900178, message: message} = request
+    {:ok, json} = File.read("test/data/text_message.json")
+    update = Telegram.Update.parse(json)
+    assert %{update_id: 131900178, message: message} = update
     assert %Telegram.Message{
       chat: chat,
       from: from,
@@ -67,9 +67,9 @@ defmodule TelegramTest do
     assert %Telegram.User{id: 456, first_name: "Col", last_name: "Harris"} = from
   end
 
-  test "encode request" do
-    json = Telegram.Request.encode(@sample_request)
-    request = Telegram.Request.parse(json)
-    assert request == @sample_request
+  test "encode update" do
+    json = Telegram.Update.encode(@sample_update)
+    update = Telegram.Update.parse(json)
+    assert update == @sample_update
   end
 end

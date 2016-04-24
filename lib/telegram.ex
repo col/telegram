@@ -50,16 +50,16 @@ defmodule Telegram do
     end
   end
 
-  defmodule Request do
+  defmodule Update do
     defstruct [update_id: nil, message: %Telegram.Message{}]
 
     def parse(body) when is_binary(body) do
-      request = Poison.decode!(body, as: %Telegram.Request{})
-      %{request | message: Telegram.Message.process_entities(request.message)}
+      update = Poison.decode!(body, as: %Telegram.Update{})
+      %{update | message: Telegram.Message.process_entities(update.message)}
     end
 
-    def encode(request) do
-      Poison.encode!(request)
+    def encode(update) do
+      Poison.encode!(update)
     end
   end
 end
