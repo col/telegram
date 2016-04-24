@@ -1,7 +1,7 @@
 {
   "update_id": 131900178,
   "message":{
-    "text": "/command",
+    "text": "/command some params",
     "message_id": 789,
     "from": {
       "last_name": "Harris",

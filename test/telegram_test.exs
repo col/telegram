@@ -24,21 +24,52 @@ defmodule TelegramTest do
       ],
       date: 1460556888,
       message_id: 789,
-      text: "/command"
+      text: "/command some params",
+      command: "/command",
+      params: ["some", "params"]
     }
   }
 
-  test "parse request" do
-    {:ok, request_body} = File.read("test/data/request.json")
-    result = Telegram.Request.parse(request_body)
-    assert @sample_request == result
+  test "parse bot message" do
+    {:ok, request_body} = File.read("test/data/bot_message.json")
+    request = Telegram.Request.parse(request_body)
+    assert %{update_id: 131900178, message: message} = request
+    assert %Telegram.Message{
+      chat: chat,
+      from: from,
+      entities: entities,
+      date: 1460556888,
+      message_id: 789,
+      text: "/command some params",
+      command: "/command",
+      params: ["some", "params"]
+    } = message
+    assert %Telegram.Chat{id: 123, title: "Test", type: "group"} = chat
+    assert %Telegram.User{id: 456, first_name: "Col", last_name: "Harris"} = from
+    assert [%Telegram.Entity{type: "bot_command", offset: 0, length: 8}] = entities
+  end
+
+  test "parse text message" do
+    {:ok, request_body} = File.read("test/data/text_message.json")
+    request = Telegram.Request.parse(request_body)
+    assert %{update_id: 131900178, message: message} = request
+    assert %Telegram.Message{
+      chat: chat,
+      from: from,
+      entities: [],
+      date: 1460556888,
+      message_id: 789,
+      text: "Hello",
+      command: nil,
+      params: nil
+    } = message
+    assert %Telegram.Chat{id: 123, title: "Test", type: "group"} = chat
+    assert %Telegram.User{id: 456, first_name: "Col", last_name: "Harris"} = from
   end
 
   test "encode request" do
-    result = Telegram.Request.encode(@sample_request)
-    expected_result = File.read!("test/data/request.json")
-      |> String.split()
-      |> Enum.join("")
-    assert result == expected_result
+    json = Telegram.Request.encode(@sample_request)
+    request = Telegram.Request.parse(json)
+    assert request == @sample_request
   end
 end
