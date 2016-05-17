@@ -79,6 +79,15 @@ defmodule TelegramTest do
     assert "New Text" = message.text
   end
 
+  test "Message.set_command" do
+    message = %Message{} |> Message.set_command("/command")
+    assert message.text == "/command"
+    assert message.command == "/command"
+
+    command_entity = Telegram.Entity.find(message.entities, "bot_command")
+    assert command_entity == %Telegram.Entity{type: "bot_command", offset: 0, length: 8}
+  end
+
   test "Message.set_entity" do
     message = %Message{}
       |> Message.set_text("/example_command")

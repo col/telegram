@@ -27,6 +27,17 @@ defmodule Telegram do
       params: nil,
     ]
 
+    def set_command(message, command) do
+      message
+        |> Map.put(:text, command)
+        |> Map.put(:command, command)
+        |> set_entity(%Telegram.Entity{
+              type: "bot_command",
+              offset: 0,
+              length: String.length(command)
+           })
+    end
+
     def set_text(message, text) do
       Map.put(message, :text, text)
     end
@@ -46,6 +57,7 @@ defmodule Telegram do
     end
 
     def process_entities(message) do
+      # TODO: Make this more generic so that it supports the other entity types
       command_entity = Telegram.Entity.find(message.entities, "bot_command")
       parse_bot_command(message, command_entity)
     end
