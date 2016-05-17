@@ -24,7 +24,7 @@ defmodule Telegram do
       message_id: nil,
       text: nil,
       command: nil,
-      params: nil,
+      params: [],
     ]
 
     def set_command(message, command) do

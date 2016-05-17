@@ -62,7 +62,7 @@ defmodule TelegramTest do
       message_id: 789,
       text: "Hello",
       command: nil,
-      params: nil
+      params: []
     } = message
     assert %Chat{id: 123, title: "Test", type: "group"} = chat
     assert %User{id: 456, first_name: "Col", last_name: "Harris"} = from
