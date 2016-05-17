@@ -1,14 +1,26 @@
 defmodule Telegram do
   defmodule Chat do
     defstruct [:id, :title, :type]
+
+    def new(id, title, type) do
+      %Chat{id: id, title: title, type: type}
+    end
   end
 
   defmodule User do
     defstruct [:id, :first_name, :last_name]
+
+    def new(id, first_name, last_name) do
+      %User{id: id, first_name: first_name, last_name: last_name}
+    end
   end
 
   defmodule Entity do
     defstruct [:type, :offset, :length]
+
+    def new(type, offset, length) do
+      %Entity{type: type, offset: offset, length: length}
+    end
 
     def find(entities, type) do
       Enum.find(entities, fn(e) -> e.type == type end)
