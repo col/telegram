@@ -66,6 +66,8 @@ defmodule Telegram do
     end
     def entity_value(message, entity) do
       String.slice(message.text, entity.offset, entity.length)
+       |> String.split("@")
+       |> List.first
     end
 
     def process_entities(message) do

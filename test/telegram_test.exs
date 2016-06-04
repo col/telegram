@@ -104,6 +104,14 @@ defmodule TelegramTest do
     assert Message.entity_value(message, "bot_command") == "/example_command"
   end
 
+  test "Message.entity_value handles bot command including bot name" do
+    message = %Message{
+      text: "/example_command@MyBot",
+      entities: [%Entity{type: "bot_command", offset: 0, length: 22}]
+    }
+    assert Message.entity_value(message, "bot_command") == "/example_command"
+  end
+
   test "Message.process_entities" do
     message = %Message{}
       |> Message.set_text("/example_command param1 param2")
